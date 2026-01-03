@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LOTRO Warden Rota Planner</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div id="app">
+
+    <!-- ============================================
+         MOBILE CONTROLS
+         ============================================ -->
+    <div id="mobile-controls">
+      <button id="toggle-timeline-btn" class="active">Timeline: ON</button>
+      <button id="toggle-tooltips-btn" class="active">Tester: ON</button>
+    </div>
+
+    <!-- ============================================
+         LEFT SIDEBAR - PALETTE
+         ============================================ -->
+    <aside id="palette">
+      
+      <!-- Masteries Section -->
+      <section class="palette-section">
+        <h2>Masteries</h2>
+        <div id="mastery-list"></div>
+      </section>
+
+      <!-- Basic Skills Section -->
+      <section class="palette-section">
+        <h2>Gambit Builder</h2>
+        <div id="skill-list"></div>
+      </section>
+
+      <!-- Cooldown Control Section -->
+      <section class="palette-section">
+        <h2>Mastery Cooldown</h2>
+        <input type="range" id="cd-slider" min="0.5" max="15" step="0.5" value="5">
+        <div id="cd-value">5.0s</div>
+      </section>
+
+    </aside>
+
+    <!-- ============================================
+         MAIN AREA - TIMELINE
+         ============================================ -->
+    <main id="timeline-area">
+
+      <!-- Timeline Controls -->
+      <div id="controls">
+        <h2 class="timeline-title">Timeline</h2>
+
+        <!-- Playback Controls -->
+        <div class="control-group">
+          <button title="Clear all timeline slots">Clear</button>
+          <button title="Remove last added item">Undo</button>
+          <button title="Reverse last change">Reverse</button>
+          <button id="add-slot-btn" title="Add new timeline slot">+ Slot</button>
+        </div>
+
+        <!-- Player Controls -->
+        <div class="control-group">
+          <button title="Start playback">Play</button>
+          <button title="Pause playback">Pause</button>
+          <button title="Stop and reset playback">Stop</button>
+        </div>
+
+        <!-- Import/Export -->
+        <div class="control-group">
+          <button title="Export timeline to file">Export</button>
+          <button title="Import timeline from file">Import</button>
+        </div>
+
+        <!-- Character Configuration -->
+        <div class="control-group">
+          <button id="character-btn" title="Configure traits and traceries">
+            Character Traits/Traceries
+          </button>
+        </div>
+
+        <!-- Preset Management -->
+        <div class="control-group">
+          <select id="preset-selector">
+            <option value="" disabled selected>Select Preset...</option>
+          </select>
+          <button id="load-preset-btn" title="Load selected preset">Load</button>
+          <button id="save-preset-btn" title="Save current timeline as preset">Save New</button>
+          <button id="delete-preset-btn" title="Delete selected preset">Delete</button>
+        </div>
+
+        <!-- Timer Display -->
+        <div id="timer">00:00.0</div>
+      </div>
+
+      <!-- Timeline Grid -->
+      <div id="timeline">
+        <!-- Timeline slots generated dynamically by JavaScript -->
+      </div>
+
+    </main>
+
+    <!-- ============================================
+         CENTER SIDEBAR - ACTIVE EFFECTS
+         ============================================ -->
+    <aside id="active-effects">
+      <h3>Active Effects</h3>
+      <div id="effects-list"></div>
+    </aside>
+
+    <!-- ============================================
+         RIGHT SIDEBAR - TOOLTIPS & TESTER
+         ============================================ -->
+    <aside id="tooltips">
+
+      <!-- Timeline Tooltip Box -->
+      <div class="tooltip-box">
+        <h3>Timeline Preview</h3>
+        <div class="tooltip-content" id="timelinetooltip"></div>
+      </div>
+
+      <!-- Character Configuration Panel (Modal) -->
+      <div id="character-panel" hidden>
+        <div class="panel-header">
+          <h2>Character Configuration</h2>
+          <button id="close-character" aria-label="Close panel">✕</button>
+        </div>
+        <div class="panel-content">
+          <div class="panel-section">
+            <h3>Traits</h3>
+            <div id="traits-list"></div>
+          </div>
+          <div class="panel-section">
+            <h3>Traceries</h3>
+            <div id="traceries-list"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gambit Tester -->
+      <div id="gambit-tester">
+        
+        <div class="gambit-header">
+          Gambit Tester
+        </div>
+
+        <!-- Input Slots -->
+        <div class="gambit-slots">
+          <div class="gambit-slot" data-index="0"></div>
+          <div class="gambit-slot" data-index="1"></div>
+          <div class="gambit-slot" data-index="2"></div>
+          <div class="gambit-slot" data-index="3"></div>
+          <div class="gambit-slot" data-index="4"></div>
+
+          <!-- Tester Controls -->
+          <div class="gambit-controls">
+            <button id="gambit-back" title="Remove last input">←</button>
+            <button id="gambit-clear" title="Clear all inputs">🗑</button>
+          </div>
+        </div>
+
+        <!-- Tester Tooltip Display -->
+        <div class="gambit-tooltip">
+          <img
+            id="gambit-tooltip-icon"
+            src="img/gambits/placeholder.png"
+            alt="Gambit Icon"
+          />
+          <div id="gambit-duration"></div>
+          <a
+            id="gambit-tooltip-link"
+            href="#"
+            target="_blank"
+            rel="noopener noreferrer"
+            hidden
+          >
+            Open Wiki →
+          </a>
+        </div>
+
+      </div>
+
+    </aside>
+
+  </div>
+
+  <!-- ============================================
+       LEGEND POPUP
+       ============================================ -->
+  <div id="legend-toggle" role="button" tabindex="0">
+    ℹ️ Explanation / Legend
+  </div>
+
+  <div id="legend-popup" hidden role="dialog" aria-labelledby="legend-title">
+    <h2 id="legend-title">Legend & Instructions</h2>
+    <div class="legend-content">
+      <p>
+        <strong>Builder Symbols:</strong><br>
+        1 = Spear (Red)<br>
+        2 = Shield (Green)<br>
+        3 = Fist (Yellow)<br>
+        4 = Execute
+      </p>
+      <p>
+        <strong>Masteries:</strong><br>
+        Masteries consist of two builder symbols and have cooldowns.
+      </p>
+      <p>
+        <strong>Timeline:</strong><br>
+        Drag builders and masteries to timeline slots.<br>
+        Use Execute to complete a gambit sequence.
+      </p>
+      <p>
+        <strong>Gambit Tester:</strong><br>
+        Test gambit sequences by dragging builders/masteries.<br>
+        See resolved gambit and duration instantly.
+      </p>
+    </div>
+    <button id="close-legend">Close</button>
+  </div>
+
+  <!-- ============================================
+       SCRIPTS
+       ============================================ -->
+  <script src="gambits.js"></script>
+  <script src="wardenrota.js"></script>
+
+</body>
+</html>

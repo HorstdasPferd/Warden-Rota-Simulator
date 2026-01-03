@@ -1,0 +1,946 @@
+/* ============================================================================
+   LOTRO Warden Rota Planner - Stylesheet
+   ============================================================================ */
+
+/* ============================================================================
+   BASE STYLES
+   ============================================================================ */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #1e1e1e;
+  color: #eee;
+  overflow-x: hidden;
+}
+
+button {
+  background: #333;
+  color: #ccc;
+  border: 1px solid #444;
+  padding: 6px 12px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 13px;
+  transition: background 0.2s, color 0.2s;
+}
+
+button:hover {
+  background: #444;
+  color: #fff;
+}
+
+button:active {
+  background: #555;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+input[type="range"] {
+  width: 100%;
+  margin: 8px 0;
+}
+
+select {
+  background: #333;
+  color: #ccc;
+  border: 1px solid #444;
+  padding: 6px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+h2 {
+  margin: 10px 0 8px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #ccc;
+}
+
+h3 {
+  margin: 8px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #aaa;
+}
+
+/* ============================================================================
+   MAIN LAYOUT
+   ============================================================================ */
+
+#app {
+  display: flex;
+  height: calc(100vh - 40px);
+  gap: 0;
+}
+
+/* ============================================================================
+   LEFT SIDEBAR - PALETTE
+   ============================================================================ */
+
+#palette {
+  width: 220px;
+  padding: 12px;
+  background: #2a2a2a;
+  border-right: 1px solid #444;
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+
+.palette-section {
+  margin-bottom: 20px;
+}
+
+.palette-section h2 {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  opacity: 0.8;
+  border-bottom: 1px solid #444;
+  padding-bottom: 4px;
+  margin-bottom: 8px;
+}
+
+/* Palette Items */
+.palette-item,
+.mastery-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 4px 8px;
+  margin-bottom: 4px;
+  background: #3a3a3a;
+  border-radius: 5px;
+  cursor: grab;
+  position: relative;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.palette-item:hover,
+.mastery-item:hover {
+  background: #454545;
+  transform: translateX(2px);
+}
+
+.palette-item:active,
+.mastery-item:active {
+  cursor: grabbing;
+}
+
+.palette-item img,
+.mastery-item img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.palette-label,
+.mastery-label {
+  font-size: 12px;
+  line-height: 1.2;
+  opacity: 0.95;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Skill Type Indicators */
+.palette-item.spear {
+  border-left: 4px solid #c0392b;
+}
+
+.palette-item.shield {
+  border-left: 4px solid #27ae60;
+}
+
+.palette-item.fist {
+  border-left: 4px solid #f1c40f;
+}
+
+.palette-item.execute {
+  border-left: 4px solid #e74c3c;
+  background: #2d1a1a;
+}
+
+/* Mastery Cooldown Overlay */
+.mastery-cd-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: bold;
+  color: #fff;
+  pointer-events: none;
+  border-radius: 5px;
+  backdrop-filter: blur(2px);
+}
+
+/* Cooldown Display */
+#cd-value {
+  text-align: center;
+  font-size: 14px;
+  font-weight: bold;
+  color: #4caf50;
+  margin-top: 4px;
+}
+
+/* ============================================================================
+   MAIN AREA - TIMELINE
+   ============================================================================ */
+
+#timeline-area {
+  flex: 1;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: hidden;
+}
+
+/* Timeline Controls */
+#controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 10px;
+  background: #252525;
+  border-radius: 6px;
+  border: 1px solid #333;
+}
+
+.timeline-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: bold;
+  color: #fff;
+}
+
+.control-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border: 1px solid #444;
+  background: #2a2a2a;
+  border-radius: 4px;
+}
+
+#timer {
+  margin-left: auto;
+  font-size: 20px;
+  font-weight: bold;
+  font-family: 'Courier New', monospace;
+  color: #4caf50;
+  padding: 4px 12px;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 4px;
+}
+
+/* Timeline Grid */
+#timeline {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(10, 64px);
+  grid-auto-rows: 64px;
+  gap: 6px;
+  background: #1a1a1a;
+  border: 2px solid #333;
+  border-radius: 6px;
+  padding: 8px;
+  overflow: auto;
+}
+
+/* Timeline Slots */
+.timeline-slot {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  background: #2a2a2a;
+  border: 2px solid #444;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.timeline-slot:hover {
+  background: #333;
+  border-color: #555;
+}
+
+.timeline-slot img {
+  max-width: 90%;
+  max-height: 90%;
+  object-fit: contain;
+}
+
+.slot-label {
+  position: absolute;
+  bottom: 3px;
+  right: 5px;
+  font-size: 11px;
+  font-weight: bold;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 2px 5px;
+  border-radius: 3px;
+  pointer-events: none;
+}
+
+/* Timeline Slot States */
+.timeline-slot.ok {
+  border-color: #27ae60;
+  box-shadow: 0 0 8px rgba(39, 174, 96, 0.4);
+}
+
+.timeline-slot.error {
+  border-color: #e74c3c;
+  box-shadow: 0 0 8px rgba(231, 76, 60, 0.4);
+}
+
+/* ============================================================================
+   CENTER SIDEBAR - ACTIVE EFFECTS
+   ============================================================================ */
+
+#active-effects {
+  width: 130px;
+  background: #252525;
+  border-left: 1px solid #444;
+  border-right: 1px solid #444;
+  padding: 10px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+#active-effects h3 {
+  margin: 0 0 12px 0;
+  font-size: 13px;
+  text-align: center;
+  text-transform: uppercase;
+  color: #aaa;
+  border-bottom: 1px solid #444;
+  padding-bottom: 6px;
+}
+
+.effect-item {
+  position: relative;
+  width: 100%;
+  height: 44px;
+  background: #333;
+  border: 1px solid #555;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  padding: 4px;
+}
+
+.effect-item img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  border-radius: 3px;
+}
+
+.effect-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 13px;
+  color: #4caf50;
+  text-shadow: 0 0 4px #000;
+  pointer-events: none;
+  border-radius: 5px;
+}
+
+/* ============================================================================
+   RIGHT SIDEBAR - TOOLTIPS & TESTER
+   ============================================================================ */
+
+#tooltips {
+  width: 380px;
+  padding: 12px;
+  background: #2a2a2a;
+  border-left: 1px solid #444;
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+
+/* Tooltip Box */
+.tooltip-box {
+  width: 100%;
+  background: #1a1a1a;
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #333;
+  border-radius: 6px;
+}
+
+.tooltip-box h3 {
+  margin: 0 0 10px 0;
+  font-size: 14px;
+  text-transform: uppercase;
+  color: #aaa;
+}
+
+.tooltip-content {
+  min-height: 200px;
+  background: #000;
+  border: 1px solid #333;
+  border-radius: 4px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Timeline Preview Styles */
+.timeline-gambits-done {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+  justify-content: center;
+}
+
+.timeline-gambits-done img {
+  width: 36px;
+  height: 36px;
+  border: 1px solid #444;
+  border-radius: 4px;
+}
+
+.timeline-gambit-live {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.timeline-gambit-live img {
+  max-width: 100%;
+  max-height: 300px;
+  border: 1px solid #444;
+  border-radius: 4px;
+}
+
+/* ============================================================================
+   GAMBIT TESTER
+   ============================================================================ */
+
+#gambit-tester {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 6px;
+  padding: 12px;
+}
+
+.gambit-header {
+  font-weight: bold;
+  font-size: 14px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  color: #aaa;
+  border-bottom: 1px solid #333;
+  padding-bottom: 6px;
+}
+
+/* Gambit Input Slots */
+.gambit-slots {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.gambit-slot {
+  width: 48px;
+  height: 48px;
+  border: 2px dashed #555;
+  background: #0a0a0a;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.gambit-slot:hover {
+  border-color: #666;
+  background: #111;
+}
+
+.gambit-slot img {
+  width: 40px;
+  height: 40px;
+}
+
+/* Gambit Controls */
+.gambit-controls {
+  margin-left: 8px;
+  display: flex;
+  gap: 6px;
+}
+
+.gambit-controls button {
+  min-width: 36px;
+  padding: 6px;
+  font-size: 16px;
+}
+
+/* Gambit Tooltip Display */
+.gambit-tooltip {
+  width: 100%;
+  background: #0a0a0a;
+  border: 2px solid #444;
+  border-radius: 6px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+#gambit-tooltip-icon {
+  width: 100%;
+  max-width: 340px;
+  height: auto;
+  background: #000;
+  border: 1px solid #333;
+  border-radius: 4px;
+}
+
+#gambit-duration {
+  font-size: 14px;
+  font-weight: bold;
+  color: #4caf50;
+  display: none;
+}
+
+#gambit-tooltip-link {
+  color: #3498db;
+  text-decoration: none;
+  font-size: 13px;
+  transition: color 0.2s;
+}
+
+#gambit-tooltip-link:hover {
+  color: #5dade2;
+  text-decoration: underline;
+}
+
+/* ============================================================================
+   CHARACTER CONFIGURATION PANEL
+   ============================================================================ */
+
+#character-panel {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 600px;
+  height: 80%;
+  max-height: 600px;
+  background: #2a2a2a;
+  border: 2px solid #444;
+  border-radius: 8px;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+}
+
+#character-panel[hidden] {
+  display: none;
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: #333;
+  border-bottom: 1px solid #444;
+  border-radius: 8px 8px 0 0;
+}
+
+.panel-header h2 {
+  margin: 0;
+  font-size: 16px;
+  color: #fff;
+}
+
+#close-character {
+  min-width: 32px;
+  height: 32px;
+  padding: 0;
+  font-size: 18px;
+  background: #444;
+}
+
+#close-character:hover {
+  background: #e74c3c;
+  color: #fff;
+}
+
+.panel-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+}
+
+.panel-section {
+  margin-bottom: 24px;
+}
+
+.panel-section h3 {
+  border-bottom: 1px solid #444;
+  padding-bottom: 6px;
+  margin-bottom: 12px;
+  color: #aaa;
+  font-size: 14px;
+  text-transform: uppercase;
+}
+
+/* Config Items */
+.config-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  padding: 8px;
+  background: #333;
+  border: 1px solid #444;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.config-item:hover {
+  background: #3a3a3a;
+}
+
+.config-item input[type="checkbox"] {
+  margin-right: 12px;
+  transform: scale(1.3);
+  cursor: pointer;
+}
+
+.config-item label {
+  cursor: pointer;
+  flex: 1;
+  font-size: 13px;
+}
+
+.config-icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 10px;
+  background: #444;
+  border-radius: 3px;
+}
+
+/* ============================================================================
+   LEGEND POPUP
+   ============================================================================ */
+
+#legend-toggle {
+  height: 40px;
+  background: #333;
+  text-align: center;
+  line-height: 40px;
+  cursor: pointer;
+  border-top: 1px solid #444;
+  transition: background 0.2s;
+  user-select: none;
+}
+
+#legend-toggle:hover {
+  background: #3a3a3a;
+}
+
+#legend-popup {
+  position: fixed;
+  bottom: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 500px;
+  background: #2a2a2a;
+  padding: 20px;
+  border: 2px solid #444;
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+  z-index: 1000;
+}
+
+#legend-popup[hidden] {
+  display: none;
+}
+
+#legend-popup h2 {
+  margin-top: 0;
+  font-size: 18px;
+  color: #fff;
+  border-bottom: 1px solid #444;
+  padding-bottom: 8px;
+}
+
+.legend-content {
+  margin: 16px 0;
+}
+
+.legend-content p {
+  margin: 12px 0;
+  line-height: 1.6;
+}
+
+.legend-content strong {
+  color: #4caf50;
+}
+
+#close-legend {
+  width: 100%;
+  margin-top: 12px;
+}
+
+/* ============================================================================
+   MOBILE CONTROLS
+   ============================================================================ */
+
+#mobile-controls {
+  display: none;
+  width: 100%;
+  padding: 8px;
+  background: #1a1a1a;
+  border-bottom: 1px solid #333;
+  justify-content: space-around;
+  gap: 10px;
+}
+
+#mobile-controls button {
+  flex: 1;
+  padding: 10px;
+  background: #333;
+  color: #888;
+  border: 1px solid #444;
+}
+
+#mobile-controls button.active {
+  background: #27ae60;
+  color: white;
+  border-color: #229954;
+}
+
+/* ============================================================================
+   SCROLLBAR STYLES
+   ============================================================================ */
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #444;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* ============================================================================
+   RESPONSIVE DESIGN - MOBILE/TABLET
+   ============================================================================ */
+
+@media (max-width: 1024px) {
+  
+  /* Show mobile controls */
+  #mobile-controls {
+    display: flex;
+  }
+  
+  /* Stack layout vertically */
+  #app {
+    flex-direction: column;
+    height: auto;
+  }
+
+  /* Palette adjustments */
+  #palette {
+    width: 100%;
+    max-height: 40vh;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+    overflow-x: auto;
+  }
+
+  .palette-section {
+    flex: 1 1 auto;
+    min-width: 200px;
+  }
+
+  .palette-section h2 {
+    font-size: 11px;
+  }
+
+  #mastery-list,
+  #skill-list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .palette-item,
+  .mastery-item {
+    width: auto;
+    min-width: 100px;
+  }
+
+  /* Timeline adjustments */
+  #timeline-area {
+    padding: 8px;
+  }
+
+  #controls {
+    justify-content: center;
+  }
+
+  .control-group {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  #timeline {
+    grid-template-columns: repeat(auto-fill, minmax(56px, 1fr));
+    grid-auto-rows: 56px;
+    max-height: 50vh;
+  }
+
+  .timeline-slot {
+    width: 100%;
+    height: 56px;
+  }
+
+  /* Active effects - horizontal layout */
+  #active-effects {
+    width: 100%;
+    height: auto;
+    max-height: 150px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    border: none;
+    border-bottom: 1px solid #444;
+  }
+
+  .effect-item {
+    width: auto;
+    min-width: 70px;
+  }
+
+  /* Tooltips adjustments */
+  #tooltips {
+    width: 100%;
+    padding: 8px;
+  }
+
+  .tooltip-box {
+    width: 100%;
+  }
+
+  #gambit-tooltip-icon {
+    max-width: 300px;
+  }
+
+  /* Legend adjustments */
+  #legend-popup {
+    width: 95%;
+    bottom: 10px;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+
+  /* Character panel adjustments */
+  #character-panel {
+    width: 95%;
+    height: 90%;
+  }
+}
+
+@media (max-width: 600px) {
+  
+  /* Further compress for very small screens */
+  #palette {
+    padding: 6px;
+  }
+
+  .palette-item,
+  .mastery-item {
+    min-width: 80px;
+    font-size: 11px;
+  }
+
+  #controls {
+    font-size: 11px;
+  }
+
+  .control-group button {
+    padding: 4px 6px;
+    font-size: 11px;
+  }
+
+  #timer {
+    font-size: 16px;
+    padding: 4px 8px;
+  }
+
+  #timeline {
+    grid-template-columns: repeat(auto-fill, minmax(48px, 1fr));
+    grid-auto-rows: 48px;
+    gap: 4px;
+  }
+
+  .timeline-slot {
+    height: 48px;
+  }
+
+  .gambit-slot {
+    width: 40px;
+    height: 40px;
+  }
+
+  .gambit-slot img {
+    width: 32px;
+    height: 32px;
+  }
+}
