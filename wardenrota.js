@@ -551,7 +551,7 @@ const playback = {
       
       // Update timeline build
       if (ok && entry.type !== "execute") {
-        state.timelineBuild.push(...utils.expandInput(entry));
+        state.timelineBuild.push(...utils.expandInput(entry.id));
       }
       
       if (entry.type === "execute") {
