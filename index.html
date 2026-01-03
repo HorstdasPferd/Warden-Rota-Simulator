@@ -165,8 +165,7 @@
         <div class="gambit-tooltip">
           <img
             id="gambit-tooltip-icon"
-            src="img/gambits/placeholder.png"
-            alt="Gambit Icon"
+            src=""
           />
           <div id="gambit-duration"></div>
           <a
@@ -194,29 +193,267 @@
   </div>
 
   <div id="legend-popup" hidden role="dialog" aria-labelledby="legend-title">
-    <h2 id="legend-title">Legend & Instructions</h2>
-    <div class="legend-content">
-      <p>
-        <strong>Builder Symbols:</strong><br>
-        1 = Spear (Red)<br>
-        2 = Shield (Green)<br>
-        3 = Fist (Yellow)<br>
-        4 = Execute
-      </p>
-      <p>
-        <strong>Masteries:</strong><br>
-        Masteries consist of two builder symbols and have cooldowns.
-      </p>
-      <p>
-        <strong>Timeline:</strong><br>
-        Drag builders and masteries to timeline slots.<br>
-        Use Execute to complete a gambit sequence.
-      </p>
-      <p>
-        <strong>Gambit Tester:</strong><br>
-        Test gambit sequences by dragging builders/masteries.<br>
-        See resolved gambit and duration instantly.
-      </p>
+    <div class="container">
+      <h1 id="legend-title">🛡️ Warden Rota Planner</h1>
+      <p class="subtitle">Complete Guide & Legend</p>
+      
+      <div class="section">
+        <h2>📋 Overview</h2>
+        <p>The Warden Rota Planner is a visual tool for planning and testing Warden skill rotations in LOTRO. Build your rotation, test gambit sequences, and simulate playback with real-time cooldown tracking.</p>
+      </div>
+  
+      <div class="section">
+        <h2>🎮 Basic Skills</h2>
+        <div class="skill-row">
+          <div class="skill-icon">1</div>
+          <div>
+            <strong style="color: #4fc3f7;">Spear</strong><br>
+            <span style="color: #888;">0.5s cast time</span>
+          </div>
+        </div>
+        <div class="skill-row">
+          <div class="skill-icon">2</div>
+          <div>
+            <strong style="color: #4fc3f7;">Shield</strong><br>
+            <span style="color: #888;">0.5s cast time</span>
+          </div>
+        </div>
+        <div class="skill-row">
+          <div class="skill-icon">3</div>
+          <div>
+            <strong style="color: #4fc3f7;">Fist</strong><br>
+            <span style="color: #888;">0.5s cast time</span>
+          </div>
+        </div>
+        <div class="skill-row">
+          <div class="skill-icon">4</div>
+          <div>
+            <strong style="color: #4fc3f7;">Execute</strong><br>
+            <span style="color: #888;">0.8s cast time - Executes the gambit sequence</span>
+          </div>
+        </div>
+      </div>
+  
+      <div class="section">
+        <h2>🔧 Timeline Builder</h2>
+        
+        <h3>How to Use:</h3>
+        <ul>
+          <li><strong>Drag & Drop:</strong> Drag skills or masteries from the palette onto timeline slots</li>
+          <li><strong>Build Sequence:</strong> Add skills (1, 2, 3) to build gambits, then Execute (4) to trigger them</li>
+          <li><strong>Masteries:</strong> Quick shortcuts for common skill combinations (e.g., "12" = Spear + Shield)</li>
+          <li><strong>Auto-Expand:</strong> Timeline automatically adds slots as you fill them (max 200)</li>
+        </ul>
+  
+        <div class="tip">
+          <strong>💡 Tip:</strong> Use masteries to save time! Instead of dragging "1" then "2", just drag "12" mastery.
+        </div>
+  
+        <h3>Timeline Controls:</h3>
+        <div class="feature-grid">
+          <div class="feature-card">
+            <h4>Play ▶️</h4>
+            <p>Start executing the rotation from the beginning</p>
+          </div>
+          <div class="feature-card">
+            <h4>Pause ⏸️</h4>
+            <p>Pause execution at current position</p>
+          </div>
+          <div class="feature-card">
+            <h4>Stop ⏹️</h4>
+            <p>Stop and reset to beginning</p>
+          </div>
+          <div class="feature-card">
+            <h4>Clear 🗑️</h4>
+            <p>Delete entire timeline</p>
+          </div>
+          <div class="feature-card">
+            <h4>Undo ↶</h4>
+            <p>Remove last added skill/mastery</p>
+          </div>
+          <div class="feature-card">
+            <h4>Reverse ⟲</h4>
+            <p>Undo last change (restores previous state)</p>
+          </div>
+        </div>
+      </div>
+  
+      <div class="section">
+        <h2>⚔️ Gambit Tester</h2>
+        <p>Test gambit combinations in real-time without building a full rotation.</p>
+        
+        <h3>Features:</h3>
+        <ul>
+          <li><strong>Live Preview:</strong> See the resulting gambit as you build</li>
+          <li><strong>Duration Display:</strong> Shows buff/DoT/HoT duration (affected by your character config)</li>
+          <li><strong>Wiki Links:</strong> Quick access to gambit information</li>
+          <li><strong>Back/Clear:</strong> Remove last input or reset completely</li>
+        </ul>
+  
+        <div class="info">
+          <strong>ℹ️ Info:</strong> The tester recognizes gambits automatically as you add skills. Valid gambits need at least 2 skills.
+        </div>
+  
+        <h3>Limitations:</h3>
+        <div class="limitation">
+          <strong>⚠️ Maximum Inputs:</strong>
+          <ul style="margin-top: 5px;">
+            <li>Basic Skills: Max 5 (e.g., 1-2-3-1-2)</li>
+            <li>Masteries: Max 3 (e.g., 12-23-31)</li>
+            <li>Combined: Follows the rules above</li>
+          </ul>
+        </div>
+      </div>
+  
+      <div class="section">
+        <h2>⏱️ Playback System</h2>
+        
+        <h3>Visual Feedback:</h3>
+        <table>
+          <tr>
+            <th>Status</th>
+            <th>Meaning</th>
+          </tr>
+          <tr>
+            <td><span style="color: #4f9;">✓ Green</span></td>
+            <td>Skill/Gambit executed successfully</td>
+          </tr>
+          <tr>
+            <td><span style="color: #f44;">✗ Red</span></td>
+            <td>Failed - Mastery on cooldown</td>
+          </tr>
+          <tr>
+            <td><span style="color: #4fc3f7;">Timer</span></td>
+            <td>Shows total rotation time (MM:SS.s)</td>
+          </tr>
+        </table>
+  
+        <h3>Mastery Cooldowns:</h3>
+        <ul>
+          <li>Adjustable via slider (default cooldown time)</li>
+          <li>Visual overlay shows remaining cooldown on palette items</li>
+          <li>Countdown updates in real-time during playback</li>
+          <li>Red border in timeline if mastery used during cooldown</li>
+        </ul>
+      </div>
+  
+      <div class="section">
+        <h2>🧩 Character Configuration</h2>
+        <div class="feature-grid">
+          <div class="feature-card">
+            <h4>Traits</h4>
+            <ul style="margin: 5px 0 0 15px;">
+              <li>Blue Line: +10s Shield buffs</li>
+              <li>Yellow Line: +10s Fist buffs</li>
+              <li>Red Line: +5s Bleed DoTs</li>
+            </ul>
+          </div>
+          <div class="feature-card">
+            <h4>Traceries</h4>
+            <ul style="margin: 5px 0 0 15px;">
+              <li>Shield Buff: +11s</li>
+              <li>Shield Tactics: +11s</li>
+              <li>Gambit Debuff: +11s</li>
+              <li>Fist DoT: +8s</li>
+              <li>Spear DoT: +8s</li>
+            </ul>
+          </div>
+        </div>
+  
+        <div class="info">
+          <strong>ℹ️ Note:</strong> Settings are saved automatically and affect both the Gambit Tester and Active Effects display.
+        </div>
+      </div>
+  
+      <div class="section">
+        <h2>💾 Import/Export & Presets</h2>
+        
+        <h3>Save Your Work:</h3>
+        <ul>
+          <li><strong>Export:</strong> Save timeline as <code>.txt</code> file</li>
+          <li><strong>Import:</strong> Load previously saved timeline</li>
+          <li><strong>Presets:</strong> Quick-load common rotations</li>
+        </ul>
+  
+        <h3>Default Presets:</h3>
+        <div class="feature-grid">
+          <div class="feature-card">
+            <h4>Blue (Tank)</h4>
+            <p>Defensive rotation with War-cry opener and Restoration chain</p>
+          </div>
+          <div class="feature-card">
+            <h4>Red (DPS)</h4>
+            <p>Offensive rotation with Offensive Strike and Brink of Victory</p>
+          </div>
+        </div>
+  
+        <h3>Custom Presets:</h3>
+        <ul>
+          <li><strong>Save Preset:</strong> Store current timeline with custom name</li>
+          <li><strong>Load Preset:</strong> Select and load any saved preset</li>
+          <li><strong>Delete Preset:</strong> Remove custom presets (default presets protected)</li>
+        </ul>
+  
+        <div class="warning">
+          <strong>⚠️ Note:</strong> Custom presets are stored in browser localStorage. Clearing browser data will delete them!
+        </div>
+      </div>
+  
+      <div class="section">
+        <h2>📱 Mobile Support</h2>
+        <p>Toggle buttons to show/hide sections on smaller screens:</p>
+        <ul>
+          <li><strong>Timeline Toggle:</strong> Show/hide timeline builder</li>
+          <li><strong>Tester Toggle:</strong> Show/hide gambit tester</li>
+        </ul>
+        <div class="tip">
+          <strong>💡 Tip:</strong> On mobile, use portrait mode for palette access and landscape for timeline view.
+        </div>
+      </div>
+  
+      <div class="section">
+        <h2>🚫 Known Limitations</h2>
+        <div class="limitation">
+          <ul>
+            <li>Maximum 200 timeline slots (technical limit)</li>
+            <li>Gambit tester: 5 basic skills OR 3 masteries max</li>
+            <li>No validation for actual in-game skill availability</li>
+            <li>Cooldowns are visual approximations only</li>
+            <li>Does not account for haste, lag, or player reaction time</li>
+          </ul>
+        </div>
+      </div>
+  
+      <div class="section">
+        <h2>❓ Frequently Asked Questions</h2>
+        
+        <h3>Q: Why did my mastery turn red?</h3>
+        <p><strong>A:</strong> The mastery is still on cooldown. Check the cooldown timer on the palette or increase cooldown time via slider.</p>
+        
+        <h3>Q: How do I know which gambit I built?</h3>
+        <p><strong>A:</strong> During playback, the Timeline Tooltip shows your current build and executed gambits with icons.</p>
+        
+        <h3>Q: Can I reorder skills in the timeline?</h3>
+        <p><strong>A:</strong> Not directly. Use Undo to remove and re-add, or export, edit the JSON, and re-import.</p>
+        
+        <h3>Q: Why isn't my custom preset showing?</h3>
+        <p><strong>A:</strong> Ensure you clicked "Save Preset" and gave it a unique name. Check that localStorage isn't disabled.</p>
+        
+        <h3>Q: What's the difference between Undo and Reverse?</h3>
+        <p><strong>A:</strong> Undo removes the last added item. Reverse restores the entire previous state (like Ctrl+Z).</p>
+      </div>
+  
+      <div class="section">
+        <h2>🎯 Best Practices</h2>
+        <div class="tip">
+          <ul>
+            <li>Use masteries to accelerate gambit building.</li>
+            <li>Save presets for common rotations to iterate faster.</li>
+            <li>Monitor cooldown overlays to avoid failed masteries.</li>
+            <li>Leverage the tester for quick gambit duration checks.</li>
+          </ul>
+        </div>
+      </div>
     </div>
     <button id="close-legend">Close</button>
   </div>
